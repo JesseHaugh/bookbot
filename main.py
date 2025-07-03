@@ -1,16 +1,30 @@
-word_count = {}
-letter_filter = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-with open("books/frankenstein.txt", "r") as f:
-    file_contents = f.read()
-    file_words = file_contents.split()
-    print("--- Begin Report of books/frankenstine.txt ---")
-    print(f"{len(file_words)} words found in the document\n")
-    for char in file_contents:
-        char = char.lower()
-        if char in word_count:
-            word_count[char] += 1
-        else:
-            word_count[char] = 1
-    for word in letter_filter:
-        print(f"The '{word}' charater was found {word_count[word]}")
-    print('--- End Report ---')
+from stats import get_num_words, letter_to_dict
+import sys
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 main.py <path_to_book>") 
+        sys.exit(1)      
+    book_path = sys.argv[1]
+    book = get_book_text(book_path)
+    num_words = get_num_words(book)
+    letter_count = letter_to_dict(book)
+
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {book_path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {num_words} total words")
+    print("--------- Character Count -------")
+    for letter in letter_count:
+        if not letter["char"].isalpha():
+            continue
+        print(f"{letter["char"]}: {letter["num"]}")
+    
+
+
+def get_book_text(book_path):
+    with open(book_path, "r") as f:
+        file_contents = f.read()
+    return file_contents
+
+main()
